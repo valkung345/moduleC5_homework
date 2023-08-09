@@ -1,4 +1,6 @@
-const xml = `
+const parser = new DOMParser();
+
+const xmlString = `
 <list>
   <student>
     <name lang="en">
@@ -19,23 +21,22 @@ const xml = `
 </list>
 `;
 
-function parseXML(xml) {
-  const parser = new DOMParser();
-  const xmlDoc = parser.parseFromString(xml, 'text/xml');
-  
-  const students = Array.from(xmlDoc.getElementsByTagName('student')).map(student => {
-    const nameElem = student.getElementsByTagName('name')[0];
-    const lang = nameElem.getAttribute('lang');
-    const firstName = nameElem.getElementsByTagName('first')[0].textContent;
-    const lastName = nameElem.getElementsByTagName('second')[0].textContent;
-    const age = parseInt(student.getElementsByTagName('age')[0].textContent);
-    const prof = student.getElementsByTagName('prof')[0].textContent;
-    
-    return { name: `${firstName} ${lastName}`, age, prof, lang };
-  });
-  
-  return { list: students };
-}
+const xmlDOM = parser.parseFromString(xmlString, "text/xml");
 
-const jsObject = parseXML(xml);
-console.log(jsObject);
+const listNode = xmlDOM.querySelector("list")
+const stydentNode = listNode.querySelector("student")
+const nameNode = stydentNode.querySelector("name")
+const firstNameNode = nameNode.querySelector("first");
+const lastNameNode = nameNode.querySelector("second");
+const ageNode = stydentNode.querySelector("age");
+const profNode = stydentNode.querySelector("prof");
+
+const langAttr = nameNode.getAttribute("lang")
+
+const result = {
+    name: firstNameNode.textContent + ' ' + lastNameNode.textContent,
+    age: Number(ageNode.textContent),
+    prof: profNode.textContent,
+    lang: langAttr,
+};
+console.log(result);
