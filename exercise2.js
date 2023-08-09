@@ -1,4 +1,5 @@
-const json = `{
+const jsonString = `
+{
     "list": [
      {
       "name": "Petr",
@@ -11,8 +12,14 @@ const json = `{
       "prof": "pilot"
      }
     ]
-   }`;
-   
-   const jsObject = JSON.parse(json);
-   console.log(jsObject);
-   
+   }
+`;
+
+const data = JSON.parse(jsonString);
+const list = data.list;
+
+for (let i = 0; i < list.length; i++) {
+    list[i].age = Number(list[i].age)
+}
+
+console.log(data);
