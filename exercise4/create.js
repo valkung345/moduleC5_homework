@@ -1,19 +1,30 @@
-const btn = document.querySelector('.j-btn');
+'use strict';
 
-btn.addEventListener('click', () => {
-  const value1 = +document.getElementById('num1').value;
-  const value2 = +document.getElementById('num2').value;
+const btn = document.querySelector('#button');
+const contentNode = document.querySelector('.answer');
 
-  let s = document.getElementById('j-result');
-  s.textContent = '';
-  if (!(value1 >= 100 && value1 <= 300 && value2 >= 100 && value2 <= 300)) {
-    s.textContent = 'одно из чисел вне диапазона от 100 до 300';
-    return;
-  }
-  // Делаем запрос за данными
-  fetch(`https://picsum.photos/${value1}/${value2}`)
-    .then((response) => {
-      document.getElementById('result').src = response.url;
-    });
+function useRequest(input_1, input_2) {
+    
+  return fetch(`https://picsum.photos/${input_1}/${input_2}`)
+         .then(response => response.blob())
+        .then(blob => URL.createObjectURL(blob))
+        .catch(() => {
+            console.log('error')
+            contentNode.innerHTML = '<p> Ошибка, повторите ввод</p>'
+        })
+}
 
+btn.addEventListener('click', async () => {
+    const inputWidth = document.querySelector('#input1').value;
+    const inputHeight = document.querySelector('#input2').value;
+    let minSize = 100,
+        maxSize = 300;
+    if ((inputWidth >= minSize && inputWidth <= maxSize) && (inputHeight >= minSize && inputHeight <= maxSize)){
+        const url = await useRequest(inputWidth, inputHeight)
+        contentNode.innerHTML = `
+      <img src='${url}' alt='image'>`
+    } else {
+        contentNode.innerHTML = `
+      <p>Число вне диапазона, повторите ввод ${minSize} до ${maxSize}</p>`
+    }
 });
